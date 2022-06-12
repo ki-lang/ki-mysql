@@ -1,5 +1,11 @@
 {
 	"namespaces": {
 		"main": "src"
+	},
+	"headers": {
+		"dirs": ["libs/headers"]
+	},
+	"binaries": {
+		"dirs": ["libs/binaries"]
 	}
 }

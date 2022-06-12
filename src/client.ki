@@ -1,12 +1,14 @@
 
 namespace main;
 
+#header "mysqlclient"
+
 class Client {
 
 	private String host;
 	private u16 port;
 
-	public func connect() ! {
+	public func connect() !Connection {
 	}
 
 }

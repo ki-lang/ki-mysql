@@ -16,7 +16,7 @@ ki pkg install github.com/ki-lang/ki-mysql latest mysql
 @ con = db.connect() or throw cant_connect;
 @ users = con.query("SELECT * FROM users LIMIT 10");
 each users as user {
-	println(user.firstname);
+	println(user.get("firstname") or "?");
 }
 ```
 
