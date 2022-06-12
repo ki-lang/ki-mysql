@@ -1,0 +1,15 @@
+
+namespace main;
+
+class Client {
+
+	private String host;
+	private u16 port;
+
+	public static func init(String host, u16 port) Client {
+	}
+
+	public func connect() ! {
+	}
+
+}
