@@ -2,6 +2,7 @@
 namespace main;
 
 #link "mysqlclient"
+#link "stdc++"
 #link "ssl"
 #link "crypto"
 #link "zstd"
