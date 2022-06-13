@@ -1,0 +1,5 @@
+
+func _test_query() i32 {
+
+	return 0;
+}

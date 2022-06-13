@@ -3,4 +3,10 @@ namespace main;
 
 class Connection {
 
+	private main:main:MYSQL mysql;
+
+	//public func __before_free() {
+	//	main:main:mysql_close(this.mysql);
+	//}
+
 }

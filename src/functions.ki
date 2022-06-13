@@ -1,7 +1,0 @@
-
-namespace main;
-
-func init(String host, u16 port) Client {
-
-	return Client { host: host, port: port };
-}

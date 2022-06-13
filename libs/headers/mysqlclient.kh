@@ -2,5 +2,22 @@
 namespace main;
 
 #link "mysqlclient"
+#link "ssl"
+#link "crypto"
+#link "zstd"
+#link "lz4"
 
+class MYSQL norfc {}
+
+// Before calling mysql_init(), either call mysql_library_init() prior to spawning any threads, or use a mutex to protect the mysql_library_init() call. This should be done prior to any other client library call.
+
+// Init
+// e.g. mysql_library_init(0, NULL, NULL)
+func mysql_library_init(i32 argc, ptr argv, ptr groups) i32; // ptr points to cstring, so: char**
+
+//
+func mysql_init(?MYSQL mysql) MYSQL; // allocates memory if passed NULL
+// connect result NULL on failed to connect, if success returns first arg back
+func mysql_real_connect(MYSQL mysql, cstring host, cstring user, cstring passwd, cstring db, u32 port, ?cstring unix_socket, u64 client_flag) ?MYSQL;
+func mysql_close(MYSQL mysql); // frees memory
 

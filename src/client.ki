@@ -5,10 +5,22 @@ namespace main;
 
 class Client {
 
-	private String host;
+	private cstring host;
+	private cstring user;
+	private cstring password;
+	private cstring db;
 	private u16 port;
 
+	public static func init(String host, String user, String password, String database, u16 port) Client {
+		return Client { host: host.cstr(), user: user.cstr(), password: password.cstr(), db: database.cstr(), port: port };
+	}
+
 	public func connect() !Connection {
+		@ m = mysql_init(null);
+		@ mm = mysql_real_connect(m, this.host, this.user, this.password, this.db, this.port, null, 0);
+		ifnull mm throw failed_to_connect;
+
+		return Connection { mysql: mm };
 	}
 
 }
