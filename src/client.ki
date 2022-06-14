@@ -17,7 +17,12 @@ class Client {
 
 	public func connect() !Connection {
 		@ m = mysql_init(null);
-		@ mm = mysql_real_connect(m, this.host, this.user, this.password, this.db, this.port, null, 0);
+		println("host: " + this.host.to_string());
+		println("user: " + this.user.to_string());
+		println("password: " + this.password.to_string());
+		println("db: " + this.db.to_string());
+		println("port: " + this.port.str());
+		@ mm = mysql_real_connect(m, this.host, this.user, this.password, this.db, cast this.port as u32, null, 0);
 		ifnull mm throw failed_to_connect;
 
 		return Connection { mysql: mm };

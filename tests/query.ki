@@ -1,5 +1,12 @@
 
 func _test_query() i32 {
 
+	@ client = main:Client.init("localhost", "root", "root", "ki", 3306);
+
+	@ db = client.connect() or return {
+		println("Failed to connect");
+		return 1;
+	};
+
 	return 0;
 }
