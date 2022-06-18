@@ -1,0 +1,13 @@
+
+trait Model {
+
+	public func mysql_import(Map<String> data){
+		?String v = null;
+		#props CLASS as name type
+		v = data.get(name) or value null;
+		notnull v do {
+			this.{name} = v#type;
+		}
+		#end
+	}
+}

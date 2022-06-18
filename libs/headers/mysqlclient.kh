@@ -9,6 +9,69 @@ namespace main;
 #link "lz4"
 
 class MYSQL norfc {}
+class MYSQL_RES norfc {}
+class MYSQL_ROW norfc {} // char** (array of string pointers)
+class MYSQL_FIELD norfc {
+    public cstring name;               // Name of column
+    public cstring org_name;           // Original column name, if an alias
+    public cstring table;              // Table of column if column was a field
+    public cstring org_table;          // Org table name, if table was an alias
+    public cstring db;                 // Database for table
+    public cstring catalog;            // Catalog for table
+    public cstring def;                // Default value (set by mysql_list_fields)
+    public u64 length;     // Width of column (create length)
+    public u64 max_length; // Max width for selected set
+    public u32 name_length;
+    public u32 org_name_length;
+    public u32 table_length;
+    public u32 org_table_length;
+    public u32 db_length;
+    public u32 catalog_length;
+    public u32 def_length;
+    public u32 flags;         // Div flags
+    public u32 decimals;      // Number of decimals in field
+    public u32 charsetnr;     // Character set
+    public MYSQL_TYPE type; // Type of field. See mysql_com.h for types
+    public ptr extension;
+}
+
+enum MYSQL_TYPE {
+    DECIMAL,
+    TINY,
+    SHORT,
+    LONG,
+    FLOAT,
+    DOUBLE,
+    NULL,
+    TIMESTAMP,
+    LONGLONG,
+    INT24,
+    DATE,
+    TIME,
+    DATETIME,
+    YEAR,
+    NEWDATE, // Internal to MySQL. Not used in protocol
+    VARCHAR,
+    BIT,
+    TIMESTAMP2,
+    DATETIME2,   // Internal to MySQL. Not used in protocol
+    TIME2,       // Internal to MySQL. Not used in protocol
+    TYPED_ARRAY, // Used for replication only 
+    INVALID: 243,
+    BOOL: 244, // Currently just a placeholder
+    JSON: 245,
+    NEWDECIMAL: 246,
+    ENUM: 247,
+    SET: 248,
+    TINY_BLOB: 249,
+    MEDIUM_BLOB: 250,
+    LONG_BLOB: 251,
+    BLOB: 252,
+    VAR_STRING: 253,
+    STRING: 254,
+    GEOMETRY: 255
+}
+
 
 // Before calling mysql_init(), either call mysql_library_init() prior to spawning any threads, or use a mutex to protect the mysql_library_init() call. This should be done prior to any other client library call.
 
@@ -21,4 +84,19 @@ func mysql_init(?MYSQL mysql) MYSQL; // allocates memory if passed NULL
 // connect result NULL on failed to connect, if success returns first arg back
 func mysql_real_connect(MYSQL mysql, cstring host, cstring user, cstring passwd, cstring db, u32 port, ?cstring unix_socket, u64 client_flag) ?MYSQL;
 func mysql_close(MYSQL mysql); // frees memory
+
+// Queries
+func mysql_query(MYSQL mysql, cstring stmt_str) i32;
+func mysql_real_query(MYSQL mysql, ptr stmt_str, u64 length) i32;
+
+// Result
+func mysql_field_count(MYSQL mysql) u32; // To check if there is a result
+func mysql_store_result(MYSQL mysql) MYSQL_RES;
+func mysql_free_result(MYSQL_RES result);
+func mysql_fetch_row(MYSQL_RES result) ?MYSQL_ROW;
+func mysql_fetch_lengths(MYSQL_RES result) ptr; // returns array of u64
+func mysql_num_fields(MYSQL_RES result) u32;
+func mysql_fetch_fields(MYSQL_RES result) ptr; // returns array of MYSQL_FIELD
+
+
 

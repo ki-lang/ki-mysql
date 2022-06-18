@@ -1,12 +1,25 @@
 
+class User {
+	public i32 id;
+	public String firstname;
+	public String lastname;
+
+	trait Model;
+}
+
 func _test_query() i32 {
 
-	@ client = main:Client.init("localhost", "root", "root", "ki", 3306);
+	@ client = main:Client.init("127.0.0.1", "root", "root", "ki", 3306);
 
 	@ db = client.connect() or return {
 		println("Failed to connect");
 		return 1;
 	};
+
+	@ users = db.all("SELECT * FROM users") or value null;
+
+	each users as user {
+	} 
 
 	return 0;
 }
