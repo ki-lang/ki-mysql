@@ -1,13 +1,24 @@
 
 trait Model {
 
-	public func mysql_import(Map<String> data){
+	public func mysql_import(Map<?String> data){
 		?String v = null;
-		#props CLASS as name type
-		v = data.get(name) or value null;
+		#props CLASS as name type schema
+		v = data.get("#{name}") or value null;
 		notnull v do {
-			this.{name} = v#type;
+			this.#{name} = v#type;
 		}
 		#end
 	}
+
+	public func mysql_export() Map<String> {
+		@ data = Map<String>.make();
+		?String v = null;
+		#props CLASS as name type schema
+		v = this.#{name}#?String;
+		data.set("#{name}", v);
+		#end
+		return data;
+	}
+
 }
