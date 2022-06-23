@@ -1,23 +1,43 @@
 
 trait Model {
 
-	public func mysql_import(Map<?String> data){
+	public Array<String> MYSQL_LOADED_FIELDS = Array<String>.make(2);
+
+	public __before_get(String key) {
+		if(this.MYSQL_LOADED_FIELDS.contains(key) == false){
+			panic field_not_loaded;
+		}
+	}
+
+	public __before_set(String key) {
+		this.MYSQL_LOADED_FIELDS.push_unique(key);
+	}
+
+	public static func mysql_import(Map<?String> data) CLASS {
+
+		@ new = CLASS {};
 		?String v = null;
+
 		#props CLASS as name type schema
 		v = data.get("#{name}") or value null;
 		notnull v do {
-			this.#{name} = v#type;
+			new.#{name} = to_#{type}(v);
 		}
 		#end
+
+		return new;
 	}
 
 	public func mysql_export() Map<String> {
+
 		@ data = Map<String>.make();
 		?String v = null;
+
 		#props CLASS as name type schema
 		v = this.#{name}#?String;
 		data.set("#{name}", v);
 		#end
+
 		return data;
 	}
 
