@@ -1,6 +1,7 @@
 
 trait Model {
 
+	public Array<String> MYSQL_CHANGED_FIELDS = Array<String>.make(2);
 	public Array<String> MYSQL_LOADED_FIELDS = Array<String>.make(2);
 
 	public __before_get(String key) {
@@ -21,7 +22,13 @@ trait Model {
 		#props CLASS as name type schema
 		v = data.get("#{name}") or value null;
 		notnull v do {
-			new.#{name} = to_#{type}(v);
+			new.#{name} = convert v to type;
+		} else {
+			#if IS_NULLABLE_TYPE type
+			new.#{name} = null;
+			#else
+			panic mysql_null_value_but_field_not_nullable;
+			#end
 		}
 		#end
 

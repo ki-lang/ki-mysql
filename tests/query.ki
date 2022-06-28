@@ -4,7 +4,7 @@ class User {
 	public i32 id;
 	public String firstname;
 	public ?String lastname;
-	public Opt<i32> nr;
+	public ?Value<i32> nr;
 	#\tag
 
 	trait Model;

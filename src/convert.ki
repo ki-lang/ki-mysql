@@ -1,0 +1,6 @@
+
+converter convert {
+	func (String a) i32 {
+		return a.i32();
+	}
+}
