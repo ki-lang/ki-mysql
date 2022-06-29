@@ -1,47 +1,46 @@
 
 trait Model {
 
-	public Array<String> MYSQL_CHANGED_FIELDS = Array<String>.make(2);
-	public Array<String> MYSQL_LOADED_FIELDS = Array<String>.make(2);
-
-	public __before_get(String key) {
-		if(this.MYSQL_LOADED_FIELDS.contains(key) == false){
-			panic field_not_loaded;
+	public static func import_all(Array<Map<?String>> rows) !CLASS {
+		@ objects = []#CLASS;
+		each rows as row {
+			objects.push(CLASS.import(row) or pass);
 		}
+		return objects;
 	}
 
-	public __before_set(String key) {
-		this.MYSQL_LOADED_FIELDS.push_unique(key);
-	}
+	public static func import(Map<?String> data) !CLASS {
 
-	public static func mysql_import(Map<?String> data) CLASS {
-
-		@ new = CLASS {};
-		?String v = null;
-
-		#props CLASS as name type schema
-		v = data.get("#{name}") or value null;
-		notnull v do {
-			new.#{name} = convert v to type;
-		} else {
-			#if IS_NULLABLE_TYPE type
-			new.#{name} = null;
-			#else
-			panic mysql_null_value_but_field_not_nullable;
-			#end
-		}
-		#end
+		@ new = CLASS {
+			#props CLASS as name type schema
+			#{name}: vscope {
+				if(data.has("#{name}")){
+					@ v = data.get("#{name}") or value null;
+					notnull v do {
+						return convert v to type;
+					} else {
+						#if IS_NULLABLE_TYPE type
+						return null;
+						#else
+						throw field_not_nullable;
+						#end
+					}
+				}
+				throw missing_field_in_select;
+			},
+			#/props
+		};
 
 		return new;
 	}
 
-	public func mysql_export() Map<String> {
+	public func export() Map<String> {
 
 		@ data = Map<String>.make();
 		?String v = null;
 
 		#props CLASS as name type schema
-		v = this.#{name}#?String;
+		v = convert this.#{name} to ?String;
 		data.set("#{name}", v);
 		#end
 
