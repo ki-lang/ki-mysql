@@ -1,50 +1,52 @@
 
-trait Model {
-
-	public static func import_all(Array<Map<?String>> rows) !CLASS {
-		@ objects = []#CLASS;
-		each rows as row {
-			objects.push(CLASS.import(row) or pass);
-		}
-		return objects;
-	}
-
-	public static func import(Map<?String> data) !CLASS {
-
-		@ new = CLASS {
-			#props CLASS as name type schema
-			#{name}: vscope {
-				if(data.has("#{name}")){
-					@ v = data.get("#{name}") or value null;
-					notnull v do {
-						return convert v to type;
-					} else {
-						#if IS_NULLABLE_TYPE type
-						return null;
-						#else
-						throw field_not_nullable;
-						#end
-					}
-				}
-				throw missing_field_in_select;
-			},
-			#/props
-		};
-
-		return new;
-	}
-
-	public func export() Map<String> {
-
-		@ data = Map<String>.make();
-		?String v = null;
-
-		#props CLASS as name type schema
-		v = convert this.#{name} to ?String;
-		data.set("#{name}", v);
-		#end
-
-		return data;
-	}
-
-}
+//class Model<T> {
+//
+//	public static func import_all(Array<Map<?String>> rows) !Array<T> {
+//		@ objects = []#T;
+//		each rows as row {
+//			objects.push(T.import(row) or pass);
+//		}
+//		return objects;
+//	}
+//
+//	public static func import(Map<?String> data) !T {
+//
+//		@ new = T {
+//			#props T as name type schema
+//			#{name}: vscope {
+//				if(data.has("#{name}")){
+//					@ v = data.get("#{name}") or value null;
+//					notnull v do {
+//						return convert v to type;
+//					} else {
+//						#if IS_NULLABLE_TYPE type
+//						return null;
+//						#else
+//						throw field_not_nullable;
+//						#end
+//					}
+//				}
+//				throw missing_field_in_select;
+//			},
+//			#/props
+//		};
+//
+//		return new;
+//	}
+//
+//	public static func update(Connection con, T object, Array<String> fields) ! {
+//
+//		@ data = Map<String>.make();
+//		?String v = null;
+//
+//		#props T as name type schema
+//		if(fields.contains("#{name}")) {
+//			v = convert object.#{name} to ?String;
+//			data.set("#{name}", v);
+//		}
+//		#end
+//
+//		con.run("UPDATE :table SET ...") or pass;
+//	}
+//
+//}

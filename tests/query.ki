@@ -7,7 +7,7 @@ class User {
 	public ?Value<i32> nr;
 	#/tag
 
-	trait Model;
+	//trait Model;
 }
 
 func _test_query() i32 {
@@ -19,10 +19,18 @@ func _test_query() i32 {
 		return 1;
 	};
 
-	@ users = db.all("SELECT * FROM users") or value null;
+	@ users = db.all("SELECT * FROM users") or return 1;
+
+	println("Results:");
 
 	each users as user {
+		@ keys = user.keys();
+		each keys as key {
+			println(key);
+		}
 	} 
+
+	println("---------------");
 
 	return 0;
 }

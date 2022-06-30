@@ -7,6 +7,7 @@ namespace main;
 #link "crypto"
 #link "zstd"
 #link "lz4"
+#link "z"
 
 class MYSQL norfc {}
 class MYSQL_RES norfc {}

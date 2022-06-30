@@ -64,8 +64,8 @@ class Connection {
 		return ret;
 	}
 
-	public func __before_free() {
-		main:main:mysql_close(this.mysql);
-	}
+	//public func __before_free() {
+	//	main:main:mysql_close(this.mysql);
+	//}
 
 }
