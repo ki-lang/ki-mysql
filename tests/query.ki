@@ -24,6 +24,7 @@ func _test_query() i32 {
 	println("Results:");
 
 	each users as user {
+		println("z");
 		@ keys = user.keys();
 		each keys as key {
 			println(key);

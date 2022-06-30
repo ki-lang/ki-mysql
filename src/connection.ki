@@ -23,12 +23,12 @@ class Connection {
 		@ result = this.query(query) or pass;
 	}
 
-	public func all(String query) !Array<Map<String>> {
+	public func all(String query) !Array<Map<?String>> {
 
 		@ result = this.query(query) or pass;
 		//ifnull result return Array<Map<String>>.make(1);
 
-		@ ret = Array<Map<String>>.make(4);
+		@ ret = Array<Map<?String>>.make(4);
 		@ num_fields = main:main:mysql_num_fields(result);
 		@ fields_ = main:main:mysql_fetch_fields(result);
 		@ fields = Array<String>.make(num_fields);
@@ -39,20 +39,23 @@ class Connection {
 			i++;
 		}
 		while (true) {
-			@ res = Map<String>.make();
+			@ res = Map<?String>.make();
 			@ row = main:main:mysql_fetch_row(result);
 			ifnull row break;
 		   	@ lengths = mysql_fetch_lengths(result);
 			@ i = 0;
-			@ adr = row;
+			@ adr = cast row as ptr;
 			while(i < num_fields) {
 
-				@ cstrptr = getptrv adr as ptr;
-				@ len = getptrv lengths as u64;
-				@ data = String.make(cstrptr, len, false);
 				@ fn = fields.get(i) or value "?";
-
-				res.set(fn, data);
+				@ cstrptr = getptrv adr as ptr;
+				if(cstrptr == null){
+					res.set(fn, null);
+				} else {
+					@ len = getptrv lengths as u64;
+					@ data = String.make(cstrptr, len, false);
+					res.set(fn, data);
+				}
 
 				adr += sizeof(ptr);
 				lengths += sizeof(ptr);
