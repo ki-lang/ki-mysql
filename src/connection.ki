@@ -36,6 +36,7 @@ class Connection {
 		while(i < num_fields) {
 			@ field = cast fields_ as MYSQL_FIELD;
 			fields.push(field.name.to_string());
+			fields_ += sizeof(MYSQL_FIELD);
 			i++;
 		}
 		while (true) {
@@ -48,6 +49,7 @@ class Connection {
 			while(i < num_fields) {
 
 				@ fn = fields.get(i) or value "?";
+				println(fn);
 				@ cstrptr = getptrv adr as ptr;
 				if(cstrptr == null){
 					res.set(fn, null);
