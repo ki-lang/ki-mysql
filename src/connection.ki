@@ -49,7 +49,6 @@ class Connection {
 			while(i < num_fields) {
 
 				@ fn = fields.get(i) or value "?";
-				println(fn);
 				@ cstrptr = getptrv adr as ptr;
 				if(cstrptr == null){
 					res.set(fn, null);

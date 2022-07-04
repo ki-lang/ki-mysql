@@ -24,10 +24,13 @@ func _test_query() i32 {
 	println("Results:");
 
 	each users as user {
-		println("z");
 		@ keys = user.keys();
 		each keys as key {
-			println(key);
+			print(key);
+			print(": ");
+			@ v = user.get(key) or value "?";
+			ifnull v set "null";
+			println(v);
 		}
 	} 
 
