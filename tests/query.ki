@@ -1,13 +1,23 @@
 
 class User {
-	#tag schema
 	public i32 id;
 	public String firstname;
 	public ?String lastname;
 	public ?Value<i32> nr;
-	#/tag
 
-	//trait Model;
+	public func import_all(Array<Map<?String>> users) Array<User> {
+		return Array<User>.make(2);
+	}
+
+	public func import(Map<?String> data) !User {
+
+		@ id = data.get("id") or throw missing_field;
+		ifnull id throw id_is_null;
+
+		return User {
+			id: id.i32() or pass,
+		};
+	}
 }
 
 func _test_query() i32 {
