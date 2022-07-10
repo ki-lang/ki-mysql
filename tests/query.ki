@@ -5,17 +5,34 @@ class User {
 	public ?String lastname;
 	public ?Value<i32> nr;
 
-	public func import_all(Array<Map<?String>> users) Array<User> {
-		return Array<User>.make(2);
+	public static func import_mysql_all(Array<Map<?String>> users) !Array<User> {
+		@ result = Array<User>.make(2);
+		each users as user {
+			result.push(User.import_mysql(user) or pass);
+		}
+		return result;
 	}
 
-	public func import(Map<?String> data) !User {
+	public static func import_mysql(Map<?String> data) !User {
 
 		@ id = data.get("id") or throw missing_field;
 		ifnull id throw id_is_null;
 
+		@ fn = data.get("firstname") or throw missing_field;
+		ifnull fn throw firstname_is_null;
+
+		@ nr = data.get("nr") or throw missing_field;
+		?Value<i32> nrv = null;
+		notnull nr do {
+			@ i = nr.i32() or value 0;
+			nrv = ?i;
+		}
+
 		return User {
 			id: id.i32() or pass,
+			firstname: fn,
+			lastname: data.get("lastname") or throw missing_field,
+			nr: nrv,
 		};
 	}
 }
@@ -33,16 +50,14 @@ func _test_query() i32 {
 
 	println("Results:");
 
-	each users as user {
-		@ keys = user.keys();
-		each keys as key {
-			print(key);
-			print(": ");
-			@ v = user.get(key) or value "?";
-			ifnull v set "null";
-			println(v);
-		}
-	} 
+	@ models = User.import_mysql_all(users) or return 1;
+	each models as u {
+		print("fn: ");
+		println(u.firstname);
+
+		print("ln: ");
+		println(u.lastname or "null");
+	}
 
 	println("---------------");
 
