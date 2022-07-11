@@ -39,7 +39,7 @@ class User {
 
 func _test_query() i32 {
 
-	@ client = main:Client.init("127.0.0.1", "root", "root", "ki", 3306);
+	@ client = main:init("127.0.0.1", "root", "root", "ki", 3306);
 
 	@ db = client.connect() or return {
 		println("Failed to connect");

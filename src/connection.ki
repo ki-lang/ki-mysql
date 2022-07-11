@@ -5,7 +5,7 @@ class Connection {
 
 	private main:main:MYSQL mysql;
 
-	private func query(String query) !main:main:MYSQL_RES {
+	private func _query(String query) !main:main:MYSQL_RES {
 		@ check = main:main:mysql_real_query(this.mysql, query.data, query.bytes);
 		if(check != 0){
 			throw failed_to_execute_query;
@@ -14,19 +14,23 @@ class Connection {
 		return result;
 	}
 
-	//public func fetch() ?Map<String> {
-	//	@ result = this.result;
-	//	ifnull result return null;
-	//}
-
 	public func run(String query) ! {
-		@ result = this.query(query) or pass;
+		@ result = this._query(query) or pass;
 	}
 
-	public func all(String query) !Array<Map<?String>> {
+	//public func first(String query) !?Map<?String> {
+	//	@ result = this._all(query, true) or pass;
+	//	@ x = result.get(0) or value null;
+	//	return x;
+	//}
 
-		@ result = this.query(query) or pass;
-		//ifnull result return Array<Map<String>>.make(1);
+	public func all(String query) !Array<Map<?String>> {
+		return this._all(query, false) or pass;
+	}
+
+	private func _all(String query, bool first) !Array<Map<?String>> {
+
+		@ result = this._query(query) or pass;
 
 		@ ret = Array<Map<?String>>.make(4);
 		@ num_fields = main:main:mysql_num_fields(result);
@@ -63,6 +67,9 @@ class Connection {
 				i++;
 			}
 			ret.push(res);
+			if(first){
+				break;
+			}
 		}
 
 		return ret;
