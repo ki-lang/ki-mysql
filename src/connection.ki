@@ -18,11 +18,11 @@ class Connection {
 		@ result = this._query(query) or pass;
 	}
 
-	//public func first(String query) !?Map<?String> {
-	//	@ result = this._all(query, true) or pass;
-	//	@ x = result.get(0) or value null;
-	//	return x;
-	//}
+	public func first(String query) !?Map<?String> {
+		@ result = this._all(query, true) or pass;
+		@ x = result.get(0) or value null;
+		return x;
+	}
 
 	public func all(String query) !Array<Map<?String>> {
 		return this._all(query, false) or pass;
